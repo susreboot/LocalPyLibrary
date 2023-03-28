@@ -49,11 +49,11 @@ def create_nav(parent, content_frame, header_label):
     nav_items = [
         ("Dashboard", lambda: dashboard(content_frame, header_label)),
         ("Add Book", lambda: add_book(content_frame, header_label)),
-        ("View Patrons", view_patrons),
-        ("Add Patron", add_patron),
-        ("View Issued Books", view_issued_books),
-        ("Issue Book", issue_book), 
-        ("Return Book", return_book), 
+        ("View Patrons", lambda: view_patrons(content_frame, header_label)),
+        ("Add Patron", lambda: add_patron(content_frame, header_label)),
+        ("View Issued Books", lambda: view_issued_books(content_frame, header_label)),
+        ("Issue Book", lambda: issue_book(content_frame, header_label)),
+        ("Return Book", lambda: return_book(content_frame, header_label)),
         ("Log Out", log_out), 
     ]
 
@@ -67,14 +67,14 @@ def dashboard(content_frame, header_label):
     clear_content_frame(content_frame)
     # Change the header label
     header_label.config(text="Dashboard")
-    books_frame = tk.Frame(content_frame, bd=2, relief=tk.SOLID, padx=20, pady=10)
-    books_frame.pack(pady=20)
+    dashboard_frame = tk.Frame(content_frame, bd=2, relief=tk.SOLID, padx=20, pady=10)
+    dashboard_frame.pack(pady=20)
 
-    books_header = tk.Label(books_frame, text="DASHBOARD", font=("Arial", 24, "bold"), pady=10)
-    books_header.pack()
+    dashboard_header = tk.Label(dashboard_frame, text="DASHBOARD", font=("Arial", 24, "bold"), pady=10)
+    dashboard_header.pack()
 
-    books_table = tk.Label(books_frame, text="TODO: DASHBOARD STUFF HERE", font=("Arial", 16))
-    books_table.pack()
+    dashboard_table = tk.Label(dashboard_frame, text="TODO: DASHBOARD STUFF HERE", font=("Arial", 16))
+    dashboard_table.pack()
 
 def add_book(content_frame, header_label):
     clear_content_frame(content_frame)
@@ -94,7 +94,10 @@ def add_book(content_frame, header_label):
 
     # Add book form elements here
 
-def view_patrons():
+def view_patrons(content_frame, header_label):
+    clear_content_frame(content_frame)
+    # Change the header label
+    header_label.config(text="View Patrons")
     # Create the view patrons frame
     view_patrons_frame = tk.Frame(content_frame, bd=2, relief=tk.SOLID, padx=20, pady=10)
     view_patrons_frame.pack(pady=20)
@@ -102,10 +105,17 @@ def view_patrons():
     # Create the view patrons header
     view_patrons_header = tk.Label(view_patrons_frame, text="VIEW PATRONS", font=("Arial", 24, "bold"), pady=10)
     view_patrons_header.pack()
+    
+    view_patrons_table = tk.Label(view_patrons_frame, text="TODO: PATRON VIEW STUFF HERE", font=("Arial", 16))
+    view_patrons_table.pack()
 
     # TODO: Add code to display patrons table
 
-def add_patron():
+def add_patron(content_frame, header_label):
+    clear_content_frame(content_frame)
+    # Change the header label
+    header_label.config(text="Add Patron")
+    
     content_frame = tk.Frame(root, padx=20, pady=10)
     content_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)    
     
@@ -114,19 +124,34 @@ def add_patron():
 
     add_patron_header = tk.Label(add_patron_frame, text="ADD PATRON", font=("Arial", 24, "bold"), pady=10)
     add_patron_header.pack()
+    
+    add_patron_table = tk.Label(add_patron_frame, text="TODO: Patron STUFF HERE", font=("Arial", 16))
+    add_patron_table.pack()
 
-def view_issued_books():
+def view_issued_books(content_frame, header_label):
+    clear_content_frame(content_frame)
+    # Change the header label
+    header_label.config(text="View Issued Books")
+    
     content_frame = tk.Frame(root, padx=20, pady=10)
     content_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+    
     issued_books_frame = tk.Frame(content_frame, bd=2, relief=tk.SOLID, padx=20, pady=10)
     issued_books_frame.pack(pady=20)
 
     issued_books_header = tk.Label(issued_books_frame, text="ISSUED BOOKS", font=("Arial", 24, "bold"), pady=10)
     issued_books_header.pack()
+    
+    issued_books_table = tk.Label(issued_books_frame, text="TODO: BOOK STUFF HERE", font=("Arial", 16))
+    issued_books_table.pack()
 
     # View issued books table here
     
-def issue_book():
+def issue_book(content_frame, header_label):
+    clear_content_frame(content_frame)
+    # Change the header label
+    header_label.config(text="Issue Books")
+    
     content_frame = tk.Frame(root, padx=20, pady=10)
     content_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
@@ -135,10 +160,17 @@ def issue_book():
 
     issue_book_header = tk.Label(issue_book_frame, text="ISSUE BOOK", font=("Arial", 24, "bold"), pady=10)
     issue_book_header.pack()
+    
+    issue_book_table = tk.Label(issue_book_frame, text="TODO: BOOK STUFF HERE", font=("Arial", 16))
+    issue_book_table.pack()
 
     # Issue book form elements here
 
-def return_book():
+def return_book(content_frame, header_label):
+    clear_content_frame(content_frame)
+    # Change the header label
+    header_label.config(text="Return Books")
+    
     content_frame = tk.Frame(root, padx=20, pady=10)
     content_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
@@ -147,6 +179,9 @@ def return_book():
 
     return_book_header = tk.Label(return_book_frame, text="RETURN BOOK", font=("Arial", 24, "bold"), pady=10)
     return_book_header.pack()
+    
+    return_book_table = tk.Label(return_book_frame, text="TODO: BOOK STUFF HERE", font=("Arial", 16))
+    return_book_table.pack()
 
     # Return book form elements here
     
