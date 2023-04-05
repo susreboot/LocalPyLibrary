@@ -350,34 +350,49 @@ def dashboard(content_frame, header_label):
     canvas.configure(yscrollcommand=scrollbar.set)
 
     # Create a frame inside the canvas widget to hold the dashboard widgets
-    dashboard_frame = tk.Frame(canvas, bd=2, relief=tk.SOLID, pady=10)
-    dashboard_frame.pack(fill="both", expand=True, padx=20, pady=10)
+    # dashboard_frame = tk.Frame(canvas, bd=2, relief=tk.SOLID, pady=10)
+    # dashboard_frame.pack(fill="both", expand=True, padx=20, pady=10)
+    
+    content_frame = tk.Frame(canvas, bd=2, relief=tk.SOLID, pady=10)
+    content_frame.pack(fill="both", expand=True, padx=20, pady=10)
     
     # Set the canvas scrolling region
-    canvas.create_window((0, 0), window=dashboard_frame, anchor="nw")
+    canvas.create_window((0, 0), window=content_frame, anchor="nw")
     
     # Resize the canvas scroll region to fit the dashboard frame
     def resize_canvas(event):
         canvas.configure(scrollregion=canvas.bbox("all"))
-    dashboard_frame.bind("<Configure>", resize_canvas)
+        
+    # Update canvas size to fit the parent window size
+    def resize_canvas_parent(event):
+        canvas.configure(width=event.width, height=event.height)
+        canvas.itemconfig(canvas_frame_id, width=event.width)
+        
+    content_frame.bind("<Configure>", resize_canvas)
+    canvas.bind("<Configure>", resize_canvas_parent)
 
-    dashboard_header = tk.Label(dashboard_frame, text="DASHBOARD", font=("Arial", 24, "bold"), pady=10)
+    dashboard_header = tk.Label(content_frame, text="DASHBOARD", font=("Arial", 24, "bold"), pady=10)
     dashboard_header.pack()
 
     # Call the display_books() function and pass the dashboard_frame to it
-    display_books(dashboard_frame, header_label)
+    display_books(content_frame, header_label)
 
-    display_patrons(dashboard_frame, header_label)
+    display_patrons(content_frame, header_label)
 
-    display_issued_books(dashboard_frame, header_label)
+    display_issued_books(content_frame, header_label)
 
     # Bind mouse wheel event to canvas
     canvas.bind("<MouseWheel>", lambda event: canvas.yview_scroll(int(-1*(event.delta/120)), "units"))
 
-    dashboard_frame.update_idletasks()
+    content_frame.update_idletasks()
     
     # Configure canvas to scroll on mouse wheel event
     canvas.configure(scrollregion=canvas.bbox("all"))
+    
+    # Update canvas size to fit the parent window size
+    canvas_frame_id = canvas.create_window(0, 0, window=content_frame, anchor="nw")
+    canvas.bind('<Configure>', resize_canvas_parent)
+
 
     
 def add_book(content_frame, header_label):
@@ -551,6 +566,6 @@ header_frame.pack(fill=tk.X)
 header_label = tk.Label(header_frame, text="WELCOME", font=("Arial", 24, "bold"), fg="black", padx=10)
 header_label.pack(side=tk.LEFT)
     
-welcome(content_frame, header_label)
+welcome(header_frame, header_label)
 
 root.mainloop()
