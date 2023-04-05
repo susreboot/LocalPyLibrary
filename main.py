@@ -1,24 +1,3 @@
-# import tkinter as tk
-# from tkinter import *
-# import sqlite3
-# from tkinter import ttk
-# import subprocess
-
-# def open_login_window():
-#     login_window = tk.Toplevel()
-#     login_window.title("Login Form")
-#     login_window.geometry("300x300")
-#     login_window.configure(bg="#1C2833")
-
-#     global login_username
-#     global login_password
-#     global message
-
-#     login_username = StringVar()
-#     login_password = StringVar()
-#     message = StringVar()
-
-#     Label(login_window, text="Login Form", bg="#0E6655", fg="white", font=("Arial", 12, "bold")).grid(row=0, column=0, columnspan=2, pady=10)
 import tkinter as tk
 from tkinter import *
 import sqlite3
@@ -97,7 +76,7 @@ def login():
             message.set("Wrong username or password")
 
 def open_dashboard():
-    subprocess.Popen(['python', 'dashboard.py'])
+    subprocess.Popen(['python', 'modules.py'])
     login_window = open_login_window()
     login_window.withdraw()
     root.destroy()
