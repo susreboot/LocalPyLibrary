@@ -141,19 +141,17 @@ def display_issued_books(content_frame, header_label):
 
     return table_frame
 
-def delete_selected_item():
-    # Get the currently selected item in the treeview
+def delete_selected_item(tree):
     cur_item = tree.focus()
+    if cur_item:
+        tree.delete(cur_item)
 
-    # Delete the item from the treeview
-    tree.delete(cur_item)
-
-    # Update the database to delete the corresponding row
-    conn = sqlite3.connect('db.sqlite3')
-    cursor = conn.cursor()
-    cursor.execute("DELETE FROM home_addbook WHERE id=?", (cur_item,))
-    conn.commit()
-    conn.close()
+        # Update the database to delete the corresponding row
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM home_addbook WHERE id=?", (cur_item,))
+        conn.commit()
+        conn.close()
 
 def display_books(content_frame, header_label):
     # Create a new frame for the table
@@ -173,8 +171,7 @@ def display_books(content_frame, header_label):
     tree_frame.pack(side="top", expand=True, fill="both")
 
     # Create the student table
-    tree = ttk.Treeview(tree_frame, columns=("bookid", "bookname", "subject", "status"), show="headings")
-    
+    tree = ttk.Treeview(tree_frame, columns=("bookid", "bookname", "author", "subject", "status"), show="headings")
     tree.heading("bookid", text="Book ID", anchor="center")
     tree.column("bookid", width=100, anchor="center", minwidth=100, stretch=True)
     tree.heading("bookname", text="Book Name", anchor="center")
@@ -183,6 +180,10 @@ def display_books(content_frame, header_label):
     tree.column("subject", width=200, anchor="center", minwidth=200, stretch=True)
     tree.heading("status", text="Status", anchor="center")
     tree.column("status", width=200, anchor="center", minwidth=200, stretch=True)
+    tree.heading("author", text="Author", anchor="center")
+    tree.column("author", width=200, anchor="center", minwidth=200, stretch=True)
+
+
     
     tree.pack(side="top", fill="both", expand=True)
 
@@ -190,87 +191,25 @@ def display_books(content_frame, header_label):
     cursor.execute("SELECT * FROM home_addbook")
     rows = cursor.fetchall()
     for row in rows:
-        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[3]))
+        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[3], row[4]))
 
     conn.close()
 
     # Create a delete button
     delete_button = ttk.Button(table_frame, 
                                text="Delete Selected Book", 
-                               command=delete_selected_item
+                               command=lambda: delete_selected_item(tree)
                                )
+    
     delete_button.pack(side="bottom", 
                        padx=10, 
                        pady=10
                        )
 
-    # Create an edit button
-    edit_button = ttk.Button(table_frame, text="Edit Selected Book", command=lambda: (print("Edit button clicked"), edit_book(int(tree.item(tree.selection())['text']))) if tree.selection() else None)
-    edit_button.pack(side="bottom", padx=10, pady=10)
-
     # Return the table frame
     return table_frame
 
-def save_edited_row(row_id, bookid, bookname, subject, status, edit_window, tree):
-    # Update the database with the new values
-    conn = sqlite3.connect('db.sqlite3')
-    cursor = conn.cursor()
-    cursor.execute("UPDATE home_addbook SET bookid=?, bookname=?, subject=?, status=? WHERE id=?", (bookid, bookname, subject, status, row_id))
-    conn.commit()
-    conn.close()
 
-    # Update the table in the GUI
-    tree.item(row_id, values=(row_id, bookid, bookname, subject, status))
-
-    # Close the edit window
-    edit_window.destroy()
-
-def edit_book(row_id):
-    print("Editing book with ID:", row_id)
-    print("Current values:", row)
-    print("edit_book called with row_id:", row_id)
-    # Create the edit window
-    edit_window = tk.Toplevel(root)
-    edit_window.title("Edit Book")
-
-    # Get the current values from the table
-    conn = sqlite3.connect('db.sqlite3')
-    cursor = conn.cursor()
-    row_id = int(row_id)
-    cursor.execute("SELECT * FROM home_addbook WHERE id=?", (row_id,))
-    row = cursor.fetchone()
-    conn.close()
-
-    # Create the input fields
-    bookid_label = tk.Label(edit_window, text="Book ID:")
-    bookid_entry = tk.Entry(edit_window)
-    bookid_entry.insert(0, row[1])
-    bookid_label.grid(row=0, column=0)
-    bookid_entry.grid(row=0, column=1)
-
-    bookname_label = tk.Label(edit_window, text="Book Name:")
-    bookname_entry = tk.Entry(edit_window)
-    bookname_entry.insert(0, row[2])
-    bookname_label.grid(row=1, column=0)
-    bookname_entry.grid(row=1, column=1)
-
-    subject_label = tk.Label(edit_window, text="Subject:")
-    subject_entry = tk.Entry(edit_window)
-    subject_entry.insert(0, row[3])
-    subject_label.grid(row=2, column=0)
-    subject_entry.grid(row=2, column=1)
-
-    status_label = tk.Label(edit_window, text="Status:")
-    status_entry = tk.Entry(edit_window)
-    status_entry.insert(0, row[4])
-    status_label.grid(row=3, column=0)
-    status_entry.grid(row=3, column=1)
-
-    # Create the save button
-    save_button = ttk.Button(edit_window, text="Save Changes", command=lambda: save_edited_row(row_id, bookid_entry.get(), bookname_entry.get(), subject_entry.get(), status_entry.get(), edit_window, tree))
-    save_button.grid(row=4, column=1)
-
-    
 def display_patrons(content_frame, header_label):
     # Create a new frame for the table
     table_frame = tk.Frame(content_frame, bd=2, padx=20, pady=10)
