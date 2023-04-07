@@ -191,7 +191,7 @@ def display_books(content_frame, header_label):
     cursor.execute("SELECT * FROM home_addbook")
     rows = cursor.fetchall()
     for row in rows:
-        tree.insert("", tk.END, values=(row[0], row[1], row[2], row[3], row[4]))
+        tree.insert("", tk.END, values=(row[1], row[2], row[6], row[3], row[4]))
 
     conn.close()
 
