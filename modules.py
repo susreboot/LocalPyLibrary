@@ -205,6 +205,83 @@ def display_books(content_frame, header_label):
                        padx=10, 
                        pady=10
                        )
+    
+    edit_button = ttk.Button(table_frame, text="Edit Selected Book", command=lambda: edit_selected_item(tree))
+    edit_button.pack(side="bottom", 
+                       padx=10, 
+                       pady=10
+                       )
+
+    def save_edited_item(tree, selected_item, book_id_entry, book_name_entry, author_entry, subject_entry, status_entry, edit_window):
+        tree.item(selected_item, text="", values=(book_id_entry.get(), book_name_entry.get(), author_entry.get(), subject_entry.get(), status_entry.get()))
+        edit_window.destroy()
+
+    def edit_selected_item(tree):
+        # Get the selected item from the treeview
+        selected_item = tree.focus()[0]
+
+        # Check if an item was selected
+        if selected_item:
+            # Get the values of the selected item
+            item_values = tree.item(selected_item)['values']
+            
+            # Create a new window for editing the selected item
+            edit_window = tk.Toplevel()
+            edit_window.title("Edit Book")
+
+            # Calculate the x and y coordinates to center the window on the screen
+            screen_width = edit_window.winfo_screenwidth()
+            screen_height = edit_window.winfo_screenheight()
+            window_width = 250
+            window_height = 250
+            x = (screen_width/2) - (window_width/2)
+            y = (screen_height/2) - (window_height/2)
+
+            # Set the dimensions and position of the window
+            edit_window.geometry(f"{window_width}x{window_height}+{int(x)}+{int(y)}")
+            
+            # Create labels and entry fields for each column in the table
+            book_id_label = tk.Label(edit_window, text="Book ID:")
+            book_id_label.grid(row=0, column=0, padx=5, pady=5)
+            book_id_entry = tk.Entry(edit_window)
+            book_id_entry.grid(row=0, column=1, padx=5, pady=5)
+            book_id_entry.insert(0, item_values[0])
+
+            book_name_label = tk.Label(edit_window, text="Book Name:")
+            book_name_label.grid(row=1, column=0, padx=5, pady=5)
+            book_name_entry = tk.Entry(edit_window)
+            book_name_entry.grid(row=1, column=1, padx=5, pady=5)
+            book_name_entry.insert(0, item_values[1])
+
+            author_label = tk.Label(edit_window, text="Author:")
+            author_label.grid(row=2, column=0, padx=5, pady=5)
+            author_entry = tk.Entry(edit_window)
+            author_entry.grid(row=2, column=1, padx=5, pady=5)
+            author_entry.insert(0, item_values[2])
+
+            subject_label = tk.Label(edit_window, text="Subject:")
+            subject_label.grid(row=3, column=0, padx=5, pady=5)
+            subject_entry = tk.Entry(edit_window)
+            subject_entry.grid(row=3, column=1, padx=5, pady=5)
+            subject_entry.insert(0, item_values[3])
+
+            status_label = tk.Label(edit_window, text="Status:")
+            status_label.grid(row=4, column=0, padx=5, pady=5)
+            status_entry = tk.Entry(edit_window)
+            status_entry.grid(row=4, column=1, padx=5, pady=5)
+            status_entry.insert(0, item_values[4])
+
+            # Create a button to save the changes
+            save_button = tk.Button(edit_window, text="Save Changes", command=lambda: save_edited_item(tree, selected_item, book_id_entry, book_name_entry, author_entry, subject_entry, status_entry))
+            save_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+
+            # Return the edit window object
+            return edit_window
+
+        else:
+            # If no item was selected, display an error message
+            messagebox.showerror("Error", "No item selected.")
+
 
     # Return the table frame
     return table_frame
